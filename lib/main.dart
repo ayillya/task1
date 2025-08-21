@@ -52,7 +52,7 @@ class _UserFetcherPageState extends State<UserFetcherPage> {
     });
 
     try {
-      final uri = Uri.parse("https://2fa0d036-25f8-4bc9-80a4-ff1726e4e097.mock.pstmn.io/caddayn/mock/users/$id");
+      final uri = Uri.parse("https://caddaynapi.free.beeceptor.com/user/$id");
       final res = await http.get(uri);
 
       if (res.statusCode == 200) {
@@ -148,7 +148,7 @@ class _UserFetcherPageState extends State<UserFetcherPage> {
                     textAlign: TextAlign.center,
                   ),
                 FetchState.loading => const CircularProgressIndicator(),
-                FetchState.success => _SuccessView(user: _user!), 
+                FetchState.success => _SuccessView(user: _user!),
                 FetchState.apiError => Text(
                     _error ?? "API Error",
                     style: const TextStyle(color: Colors.red),
@@ -190,14 +190,25 @@ class _SuccessView extends StatelessWidget {
             width: 300,
             height: 300,
             decoration: BoxDecoration(
+              color: Colors.grey[300], // background for the placeholder
               borderRadius: BorderRadius.circular(12),
             ),
             clipBehavior: Clip.hardEdge,
-            child: Image.network(
-              user.profileImage ?? '',
-              fit: BoxFit.cover,
-            ),
+            child: (user.profileImage != null && user.profileImage!.isNotEmpty)
+                ? Image.network(
+                    user.profileImage!,
+                    fit: BoxFit.cover,
+                  )
+                : Center(
+                    child: Icon(
+                      Icons.person,
+                      size: 80, // adjust size as you like
+                      color: Colors.grey[700], // matches grey background
+                    ),
+                  ),
           ),
+
+// helper method
 
           const SizedBox(width: 20), // gap between image and details
 
@@ -210,71 +221,105 @@ class _SuccessView extends StatelessWidget {
 
                 // Name
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 100, // fixed width for all labels
+                      width: 67,
                       child: const Text(
-                        "Name:",
+                        "Name",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    Text(
-                      user.name,
-                      style: const TextStyle(color: Colors.yellow),
+                    const Text(
+                      " : ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        user.name,
+                        style: const TextStyle(color: Colors.yellow),
+                      ),
+                    ),
+                  ],
+                ),
+
+                                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 67,
+                      child: const Text(
+                        "User ID",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const Text(
+                      " : ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        "${user.id}",
+                        style: const TextStyle(color: Colors.yellow),
+                      ),
                     ),
                   ],
                 ),
 
                 // Age
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 100,
+                      width: 67,
                       child: const Text(
-                        "Age:",
+                        "Age",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    Text(
-                      "${user.age ?? 'N/A'}",
-                      style: const TextStyle(color: Colors.yellow),
+                    const Text(
+                      " : ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        "${user.age ?? 'N/A'}",
+                        style: const TextStyle(color: Colors.yellow),
+                      ),
                     ),
                   ],
                 ),
 
                 // Profession
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 100,
+                      width: 67,
                       child: const Text(
-                        "Profession:",
+                        "Profession",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    Text(
-                      "${user.profession ?? 'N/A'}",
-                      style: const TextStyle(color: Colors.yellow),
+                    const Text(
+                      " : ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        user.profession ?? 'N/A',
+                        style: const TextStyle(color: Colors.yellow),
+                      ),
                     ),
                   ],
                 ),
 
                 // ID
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: const Text(
-                        "ID:",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    Text(
-                      "${user.id}",
-                      style: const TextStyle(color: Colors.yellow),
-                    ),
-                  ],
-                ),
+
               ],
             ),
           )
