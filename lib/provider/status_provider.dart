@@ -9,10 +9,16 @@ class StatusProvider extends ChangeNotifier {
   String? _error; String? get error => _error;
 
   Future<void> fetchUserById(int? id) async {
-    if (id == null || id < 1 || id > 3) { _state = FetchState.apiError; _error = "Please enter a valid ID (1, 2, or 3). The value provided was invalid."; notifyListeners(); return; }
-    _state = FetchState.loading; notifyListeners();
-    try { _user = await NetworkManager.fetchUser(id); _state = FetchState.success; }
-    catch (e) { _state = FetchState.apiError; _error = "Failed to fetch user: ${e.toString()}"; }
+    _state = FetchState.loading; notifyListeners(); // show spinner immediately
+    if (id == null || id < 1 || id > 3) { 
+      await Future.delayed(const Duration(milliseconds: 300)); // spinner visible briefly
+      _state = FetchState.apiError; 
+      _error = "Please enter a valid ID (1, 2, or 3). The value provided was invalid."; 
+      notifyListeners(); 
+      return; 
+    }
+    try { _user = await NetworkManager.fetchUser(id); _state = FetchState.success; } 
+    catch (e) { _state = FetchState.apiError; _error = e.toString().replaceFirst("Exception: ", ""); }
     notifyListeners();
   }
 }

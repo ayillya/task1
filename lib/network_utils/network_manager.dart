@@ -12,6 +12,7 @@ class NetworkManager {
         if (decoded['success'] == true && decoded['data']?['user'] != null) { return User.fromJson(decoded['data']['user']); } 
         else { throw Exception(decoded['error']?.toString() ?? decoded['data']?['message']?.toString() ?? 'No user found'); } 
       } else { throw Exception("HTTP ${res.statusCode}"); } 
-    } catch (e) { throw Exception("Something went wrong"); }
+    } on http.ClientException { throw Exception("Something went wrong"); } 
+    catch (e) { throw e; }
   }
 }

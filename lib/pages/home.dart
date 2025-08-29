@@ -11,7 +11,6 @@ class UserFetcherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final idController = TextEditingController();
     return Scaffold(
-      appBar: AppBar(title: const Text("User Fetcher")),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(25),
